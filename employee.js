@@ -6,8 +6,11 @@ const connectionLevels = {
     hsot: "localhost",
     port: 3003,
     user: "root",
-    password: ""
+    password: "",
+    database: "employee_trackersDB"
 }
+
+function mainMenu(){
 
 inquirer
 .prompt({
@@ -24,3 +27,4 @@ inquirer
         "Add an employee",
     ]
 })
+};
