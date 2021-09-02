@@ -4,8 +4,9 @@ const mysql = require("mysql");
 
 const connectionLevels = {
     hsot: "localhost",
-    port: 3002,
+    port: 3003,
     user: "root",
+    password: ""
 }
 
 inquirer
