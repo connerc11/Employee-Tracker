@@ -53,6 +53,34 @@ function mainMenu() {
                     }console.log(results);
                     return results;
                 })
+            }if (answers.action === "View all roles") {
+                connectionLevels.query("SELECT * FROM role", (err, results) => {
+                    if (err) {
+                        return console.log(err.message);
+                    }console.log(results)
+                    return results
+                })
+            }else if (answers.action === "Add a role") {
+                connectionLevels.query("SELECT FROM * department ", (err, results) => {
+                    if (err) throw err;
+
+                    inquirer
+                    .prompt([
+                        {
+                            name: "new_role",
+                            type: "input",
+                            message: "Please add the new role!",
+                        },
+                        {
+                            name: "salary",
+                            type: "input",
+                            message: "What is the salary of the new ${new_role} ?"
+                            
+                        }
+                    ])
+
+                })
+            
             }
 
         })
