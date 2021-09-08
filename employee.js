@@ -75,7 +75,7 @@ function mainMenu() {
                             {
                                 name: "salary",
                                 type: "input",
-                                message: `What is the salary of the new ${new_role}?`
+                                message: `What is the salary of the new salary?`
 
                             },
                             {
@@ -87,10 +87,12 @@ function mainMenu() {
                             const role = answers.new_role
                             const salary = answers.salary
                             const department_id = answers.department_id
-                            connectionLevels.query(`INSERT INTO role SET (new_role, salary, department_id) VALUES "${role}", "${salary}", "${department_id}"`);
-                            if (err) {
-                                throw err
-                            } console.table(results)
+                            connectionLevels.query(`INSERT INTO role SET (new_role, salary, department_id) VALUES "${role}", "${salary}", "${department_id}"`, (err, results => {
+                                if (err) {
+                                    throw err
+                                }   
+                            }));
+                             console.table(results)
                         })
 
                 })
