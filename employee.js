@@ -1,3 +1,4 @@
+const { EEXIST } = require("constants");
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const util = require("util");
@@ -36,6 +37,7 @@ function mainMenu() {
                 "Add a department",
                 "Add a role",
                 "Add an employee",
+                "Update an employee role"
             ]
         }).then(answers => {
             if (answers.action === "View all departments") {
@@ -88,28 +90,78 @@ function mainMenu() {
                             connectionLevels.query(`INSERT INTO role SET (new_role, salary, department_id) VALUES "${role}", "${salary}", "${department_id}"`);
                             if (err) {
                                 throw err
-                            } console.table(answers)
+                            } console.table(results)
                         })
 
                 })
 
             }if (answers.action === "View All Employees") {
-                connectionLevels.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name")
-                if (err) {
-                    return console.log(err.message)
-                }console.log(results)
-                return results
-            }else if (answers.action === "Add an employee") {
+                connectionLevels.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name", (err, results) => {
+                    if (err) {
+                        return console.log(err.message)
+                    }console.log(results)
+                    return results
+                })
+                }else if (answers.action === "Add an employee") {
                 connectionLevels.query("INSERT INTO employee", (err, results) => {
                     if (err) throw err
 
                     inquirer
                     .prompt([
-                                
-                    ])
+                        {
+                            type: "input",
+                            message: "Please enter the employee's first name",
+                            name: "first_name"
+                        },  
+                        {
+                            type: "input",
+                            message: "Please enter the employee's last name",
+                            name: "last_name",
+                        },        
+                        {
+                            type: "input",
+                            message: "Please enter the employee's role",
+                            name: "role_id",
+                        }, 
+                        {
+                            type: "input",
+                            message: "Please enter the employee's manager",
+                            name: "manager_id",
+                        },                        
+                    ]).then (answers => {
+                        const first_name = answers.first_name;
+                        const last_name = answers.last_name;
+                        const role_id = answers.role_id
+                        const manager_id = answers.manager_id;
+                        connectionLevels.query(`INSERT INTO employee.first_name, employee.last_name, employee.role_id, employee.manager_id VALUES ${first_name} ${last_name} ${role_id} ${manager_id}`, (err, results) => {
+                            if (err) throw err;
+                            return results;
+                        })
+                    })
                 })
-
-            }
+            
+            }if (answers.action === "Update an employee role")
+            inquirer.prompt([
+                {
+                    type:"input",
+                    message: "Enter the employee's ID that needs to be updated",
+                    name: "EmployeeUpdate",
+                },
+                {
+                    type: "input",
+                    message: "Enter the new role ID for the employee!",
+                    name: "UpdateRole"
+                }
+            ]).then (answers => {
+                const updateE = answers.updateE;
+                const updateR = answers.updateR;
+                connectionLevels.query(`UPDATE employee SET role_id ${updateR} WHERE id = ${updateE}`, (err, results => {
+                    if (err) throw err;
+                    console.log(results)
+                }))
+            })
+            
+            
 
         })
 
