@@ -1,8 +1,8 @@
 const { EEXIST } = require("constants");
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
-const { allowedNodeEnvironmentFlags } = require("process");
 const util = require("util");
+const cTable = require('console.table');
 
 const connectionLevels = mysql.createConnection({
   host: "localhost",
@@ -14,7 +14,7 @@ const connectionLevels = mysql.createConnection({
 connectionLevels.connect(function (err) {
   if (err) throw err;
 });
-// const dbQuery = util.promisify(connectionLevels.query)
+
 
 connectionLevels.query("SELECT * FROM department", (err, results) => {
   if (err) {
@@ -23,14 +23,8 @@ connectionLevels.query("SELECT * FROM department", (err, results) => {
   return results;
 });
 
-async function mainMenu() {
-    // const departments = await viewDepartments()
-    // const departmentArr = departments.map(({id, name}) => ({
-    //     name: name, 
-    //     value: id
-    // }) )
-    
-    
+function mainMenu() {
+  
   inquirer
     .prompt({
       name: "action",
@@ -49,92 +43,65 @@ async function mainMenu() {
     .then((answers) => {
       if (answers.action === "View all departments") {
         viewDepartments();
-      } if (answers.action === "Add a department") {
+      }
+      if (answers.action === "Add a department") {
         addDepartment();
       }
       if (answers.action === "View all roles") {
-       viewRole();
-      } if (answers.action === "Add a role") {
+        viewRole();
+      }
+      if (answers.action === "Add a role") {
         addRole();
       }
       if (answers.action === "View all employees") {
-
         viewEmployees();
-      }if (answers.action === "Add an employee") {
+      }
+      if (answers.action === "Add an employee") {
         addEmployee();
       }
-      if (answers.action === "Update an employee role") 
-        inquirer
+      if (answers.action === "Update an employee role") {
+        updateEmployee();
+      }
+
+      //
+
+      function viewRole() {
+        connectionLevels.query("SELECT * FROM role", (err, results) => {
+          if (err) {
+            return console.log(err.message);
+          }
+          console.table(results);
+          mainMenu();
+          return results;
+        });
+      };
+
+      async function addRole() {
+        await inquirer
           .prompt([
             {
-              type: "input",
-              message: "Enter the employee's ID that needs to be updated",
-              name: "EmployeeUpdate",
-            },
-            {
-              type: "input",
-              message: "Enter the new role ID for the employee!",
-              name: "UpdateRole",
-            },
-        
-          ])
-          .then((answers) => {
-            const updateE = answers.updateE;
-            const updateR = answers.updateR;
-            connectionLevels.query(
-              `UPDATE employee SET role_id ${updateR} WHERE id = ${updateE}`,
-              (err,
-              (results) => {
-                if (err) throw err;
-                console.log(results);
-              })
-            );
-          });
-    });
-    }
-
-//
-
-
-const viewRole = () => {
-    connectionLevels.query("SELECT * FROM role", (err, results) => {
-        if (err) {
-          return console.log(err.message);
-        }
-        console.log(results);
-        return results;
-      });
-}
-
-const addRole = () => {
-    connectionLevels.query("SELECT * FROM department", (err, results) => {
-        if (err) throw err;
-
-        inquirer
-          .prompt([
-            {
-              name: "new_role",
+              name: "title",
               type: "input",
               message: "Please add the new role!",
             },
             {
               name: "salary",
               type: "input",
-              message: `What is the salary of the new salary?`,
+              message: "What is the salary of the new salary?",
             },
             {
               name: "department_id",
               type: "list",
-              message: "What is the department of this new role?",
-              // choices: departmentArr,
+              message: "Enter the apartment ID of this new role",
             },
           ])
           .then((answers) => {
-            const role = answers.new_role;
+            const role = answers.title;
             const salary = answers.salary;
             const department_id = answers.department_id;
+            console.log(results)
             connectionLevels.query(
-              `INSERT INTO role SET (new_role, salary, department_id) VALUES "${role}", "${salary}", "${department_id}"`,
+              `INSERT INTO role (title, salary, department_id) VALUES '${role}', ${salary}, ${department_id}`,
               (err,
               (results) => {
                 if (err) {
@@ -142,48 +109,55 @@ const addRole = () => {
                 }
               })
             );
-            mainMenu();
+
             console.table(results);
+            mainMenu();
           });
-      });
-}
-
-const addDepartment = () => {
-    connectionLevels.query(
-        "INSERT INTO department SET ? ",
-        { name: "Accounting" },
-        (err, results) => {
-          if (err) {
-            return console.log(err.message);
-          }
-          console.log(results);
-          mainMenu();
-          return results;
-        }
-      );
-    }
-
-
-
-const viewEmployees = () => {
-    return connectionLevels.query(
-        "SELECT employee.id, employee.first_name, employee.last_name, employee.role_id FROM employee",
-        (err, results) => {
-          if (err) {
-          return console.log(err.message);
-        }
-        console.log(results);
-        mainMenu();
-        return results;
       }
-      );
-}
 
-const addEmployee = () => {
-    connectionLevels.query("INSERT INTO employee", (err, results) => {
-        if (err) throw err;
+      function addDepartment() {
+        inquirer 
+        .prompt ({
+            type: "input",
+            name: "newDepartment",
+            message: "Enter a name for the new department!"
 
-        inquirer
+        }).then ((answers) => {
+            
+            const newDepartment = answers.newDepartment
+            connectionLevels.query(
+                `INSERT INTO department (name) VALUES ("${newDepartment}")`,
+              
+                (err, results) => {
+                  if (err) {
+                    return console.log(err.message);
+                  }
+                  console.table(results);
+                  mainMenu();
+                  return results;
+                }
+              );
+        })
+
+        
+      };
+
+      function viewEmployees() {
+        return connectionLevels.query(
+          "SELECT employee.id, employee.first_name, employee.last_name, employee.role_id, manager_id FROM employee",
+          (err, results) => {
+            if (err) {
+              return console.log(err.message);
+            }
+            console.table(results);
+            mainMenu();
+            return results;
+          }
+        );
+      };
+
+      async function addEmployee() {
+        await inquirer
           .prompt([
             {
               type: "input",
@@ -211,8 +185,9 @@ const addEmployee = () => {
             const last_name = answers.last_name;
             const role_id = answers.role_id;
             const manager_id = answers.manager_id;
+            console.log(answers);
             connectionLevels.query(
-              `INSERT INTO employee.first_name, employee.last_name, employee.role_id, employee.manager_id VALUES ${first_name} ${last_name} ${role_id} ${manager_id}`,
+              `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${first_name}', '${last_name}', ${role_id}, ${manager_id});`,
               (err, results) => {
                 if (err) throw err;
                 mainMenu();
@@ -220,23 +195,61 @@ const addEmployee = () => {
               }
             );
           });
-      });
+      }
+
+      function viewDepartments() {
+        return connectionLevels.query(
+          "SELECT * FROM department",
+          (err, results) => {
+            if (err) {
+              return console.log(err.message);
+            }
+
+            console.table(results);
+            mainMenu();
+            return results;
+          }
+        );
+      };
+
+    function updateEmployee() {
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              message: "Enter the employee's ID that needs to be updated",
+              name: "EmployeeUpdate",
+            },
+            {
+              type: "input",
+              message: "Enter the new role ID for the employee!",
+              name: "UpdateRole",
+            },
+          ])
+          .then((answers) => {
+            const EmployeeUpdate = answers.EmployeeUpdate;
+            const updateRole = answers.UpdateRole;
+            console.log(answers)
+            
+            connectionLevels.query(
+              `UPDATE employee SET role_id = '${updateRole}' WHERE id = '${EmployeeUpdate}'`,
+              (err, results) => {
+                if (err) {
+                  return console.log(err.message);
+                }
+    
+                console.table(results);
+                mainMenu();
+                return results;
+              }
+            );
+          });
+    }});
 }
 
-
-const viewDepartments = () => {
-    return connectionLevels.query("SELECT * FROM department", (err, results) => {
-        if (err) {
-          return console.log(err.message);
-        }
-        console.log(results);
-        mainMenu()
-        return results;
-        
-      });
-     
-}
-
+// function display() {
+    
+// }
 
 
 mainMenu();
