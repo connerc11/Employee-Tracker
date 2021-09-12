@@ -1,4 +1,4 @@
-# Note Taker Starter Code
+# Employee Tracker
    
   * [Information](#information)
   * [Installation](#installation)
@@ -33,5 +33,5 @@
   * Feel free to reach out to my email: hello1234@gmail.com
   * To see more of my work check out my github! The username is: connerc11
   * Also click the link to have easy access to the Github! (https://github.com/connerc11)
-  # License
+
    
