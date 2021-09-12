@@ -10,7 +10,7 @@
   
   # Information
   ~ there is Information, Installation, Usage, Usefulness, Test, Questions and License
-  ![Get Started](./public/assets/image-1.png)
+  ![Get Started](./images/image-png.png)
 
 
   # Installation
@@ -20,7 +20,7 @@
   # Usage
   ~ The project will be useful for generating a chart of employees and being able to add employees for whatever company necessary. 
 
-  You can access the project through https://note-taker1001.herokuapp.com/
+
   
   # Usefulness
   ~ This project will be useful for storing information or keeping track of to do items for the day. It is important to incorporate important notes that can be used for later.
