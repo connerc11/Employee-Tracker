@@ -91,7 +91,7 @@ function mainMenu() {
             },
             {
               name: "department_id",
-              type: "list",
+              type: "input",
               message: "Enter the apartment ID of this new role",
             },
           ])
@@ -99,9 +99,9 @@ function mainMenu() {
             const role = answers.title;
             const salary = answers.salary;
             const department_id = answers.department_id;
-            console.log(results)
+            
             connectionLevels.query(
-              `INSERT INTO role (title, salary, department_id) VALUES '${role}', ${salary}, ${department_id}`,
+              `INSERT INTO role (title, salary, department_id) VALUES ('${role}', ${salary}, ${department_id})`,
               (err,
               (results) => {
                 if (err) {
