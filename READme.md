@@ -19,6 +19,7 @@
   
   # Usage
   ~ The project will be useful for generating a chart of employees and being able to add employees for a company or a certain department. 
+  A video for the project can be viewed at https://drive.google.com/file/d/14mYCbKdjqTI2PJfg0Hm1uKEFl9Qew_LE/view
 
 
   # Usefulness

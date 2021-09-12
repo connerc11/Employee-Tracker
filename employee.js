@@ -92,7 +92,7 @@ function mainMenu() {
             {
               name: "department_id",
               type: "input",
-              message: "Enter the apartment ID of this new role",
+              message: "Enter the department ID of this new role",
             },
           ])
           .then((answers) => {
