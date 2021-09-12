@@ -102,12 +102,14 @@ function mainMenu() {
             
             connectionLevels.query(
               `INSERT INTO role (title, salary, department_id) VALUES ('${role}', ${salary}, ${department_id})`,
-              (err,
-              (results) => {
+              (err, results) => {
                 if (err) {
-                  throw err;
+                  return console.log(err.message);
                 }
-              })
+                console.table(results);
+                mainMenu();
+                return results;
+              }
             );
 
             console.table(results);

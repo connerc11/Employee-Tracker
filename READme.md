@@ -18,15 +18,14 @@
 
   
   # Usage
-  ~ The project will be useful for generating a chart of employees and being able to add employees for whatever company necessary. 
+  ~ The project will be useful for generating a chart of employees and being able to add employees for a company or a certain department. 
 
 
-  
   # Usefulness
-  ~ This project will be useful for storing information or keeping track of to do items for the day. It is important to incorporate important notes that can be used for later.
+  ~ This project will be useful for practicing working with node and mysql. It is also useful to design a project team and create either a role, department or add an employee.
   
   # Test 
-  ~ It will be tested through node and will be developed in the back end mixed with the front end through Routes. This will help generate a page to complete information. 
+  ~ It will be tested through node and will be developed in the back end and will be using schema in order to create charts to run the information. This will help generate a page to complete information. 
   
   # Questions
    This will be standard for setting up a design team online.
